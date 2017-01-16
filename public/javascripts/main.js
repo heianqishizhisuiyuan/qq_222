@@ -1,10 +1,10 @@
 $(function(){
 	var before_h=$(window).height() ;
-	$(window).resize(function(){
+	/*$(window).resize(function(){
 		var now_h=$(window).height() ;
 		$('.go_regist,.go_login').css('top',before_h-25)
 		
-	})
+	})*/
 	$("#regist_btn").click(function(){
 		var user_name=$("#user_name").val();
 		var user_phone=$("#user_phone").val();
@@ -84,8 +84,11 @@ $(function(){
 		$(".home_title div").removeClass("home_title_class");
 		$(this).addClass('home_title_class');
 	})
-
-	var socket = io();
+        try{
+	  var socket = io().connect("localhost");
+	}catch(err){
+	}
+	
 	var from_=$(".q_title").html();
 
 	$(".message-ul li").click(function(){
@@ -114,7 +117,8 @@ $(function(){
 			}
 		});
 		//接收消息
-		socket.on(from_+ '_message', function(from, msg, time) {
+	        try{
+		    socket.on(from_+ '_message', function(from, msg, time) {
 		   // var message = from + "  " + new Date(time).toLocaleString() + "\n" + msg + '\n';
 		    var chat_content="<div class='clearfix chat-content-wrap'><div class='chat-header fl'>"
 			+"<img src='/images/header.jpg'></div><div class='cx_org_box'><div class='chat-content'>"+msg+"</div><span class='cx_org_cor'></span></div></div>";
@@ -122,6 +126,8 @@ $(function(){
 		    //updateMsgForm(message);
 			$('#chat-list-wrap').scrollTop( $('#chat-list-wrap')[0].scrollHeight );
 		});
+		}catch(err){}
+		
 		var beforeh=$(window).height();
 		$(window).resize(function(){
 			var chatListh=$("#chat-list").height();
